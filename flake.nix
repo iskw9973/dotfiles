@@ -1,5 +1,5 @@
 {
-  description = "iskw9973's dotfiles - CLI tools managed by Nix + home-manager";
+  description = "iskw9973's dotfiles";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
@@ -11,7 +11,7 @@
       url = "github:nix-darwin/nix-darwin";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    # Homebrew 本体のインストールと版の固定（brew-src が flake.lock に pin される）
+    # Homebrew 本体も flake.lock で版を固定する
     nix-homebrew.url = "github:zhaofengli/nix-homebrew";
   };
 
@@ -24,16 +24,12 @@
       ...
     }:
     let
-      # メインマシン: Apple Silicon Mac
       system = "aarch64-darwin";
-
-      # macOS のログインユーザー名に合わせて変更する（`whoami` の値）
       username = "masamichi";
 
       pkgs = import nixpkgs {
         inherit system;
-        # unfree なパッケージは既定で拒否される。必要なものだけを名指しで許可する。
-        # terraform は BSL 1.1（unfree 扱い）。
+        # unfree は既定で拒否。必要なものだけ名指しで許可する
         config.allowUnfreePredicate = pkg: builtins.elem (nixpkgs.lib.getName pkg) [ "terraform" ];
       };
 
@@ -55,9 +51,7 @@
               nix-homebrew = {
                 enable = true;
                 user = user;
-                # 手動インストール済みの /opt/homebrew があれば取り込む
-                # （新しい Mac では何もない状態から brew を設置する）
-                autoMigrate = true;
+                autoMigrate = true; # 手動インストール済みの /opt/homebrew を取り込む
               };
             }
           ];
@@ -65,8 +59,7 @@
         };
     in
     {
-      # キーをホスト名ではなくユーザー名にしている。
-      # Mac を買い替えるとホスト名は変わるが、それでも同じコマンドで復元できる。
+      # キーはホスト名ではなくユーザー名。Mac を買い替えても同じコマンドで復元できる
       homeConfigurations.${username} = mkHome username;
 
       darwinConfigurations.${username} = mkDarwin username [
@@ -74,11 +67,9 @@
         ./nix/darwin-personal.nix
       ];
 
-      # 仕事マシン用（共通部分のみ・Expo ツールチェーンや個人ツールなし）。
-      # 使うときはログインユーザー名に合わせてコメントを外す:
-      #   homeConfigurations.<work-user> = mkHome "<work-user>";
-      #   darwinConfigurations.<work-user> = mkDarwin "<work-user>" [ ./nix/darwin.nix ];
-      # 適用: sudo darwin-rebuild switch --flake .#<work-user>
+      # 仕事マシンなど共通部分だけ使う場合はこの形で足す:
+      #   homeConfigurations.<user> = mkHome "<user>";
+      #   darwinConfigurations.<user> = mkDarwin "<user>" [ ./nix/darwin.nix ];
 
       formatter.${system} = pkgs.nixfmt-rfc-style;
     };

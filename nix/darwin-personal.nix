@@ -2,16 +2,15 @@
 { ... }:
 {
   homebrew = {
-    # サードパーティの tap。ここに書かないと cleanup が untap しようとする
+    # ここに書かないと cleanup が untap しようとする
     taps = [
       "openclaw/tap" # gogcli の配布元
     ];
 
     brews = [
-      # Google Workspace CLI（gog スキルが使う）。nixpkgs に無い
-      "gogcli"
+      "gogcli" # Google Workspace CLI。nixpkgs に無い
 
-      # コンテナ。podman machine（VM）の管理が絡むので Nix にしない
+      # podman machine（VM）の管理が絡むので Nix にしない
       "podman"
       "docker-compose"
 
@@ -21,9 +20,7 @@
       "fastlane"
       "openjdk@17"
 
-      # Metal サポートが絡むので Nix にしない
-      "ollama"
-
+      "ollama" # Metal サポートが絡むので Nix にしない
       "tailscale"
     ];
   };

@@ -42,17 +42,16 @@ for item in CLAUDE.md commands hooks rules settings.json statusline.sh assets; d
 done
 
 # ~/.claude/skills: スキルを個別にリンクする。
-# install.local.sh（gitignore 済み・任意）で EXTRA_SKILL_DIRS に
-# 追加のスキルディレクトリを列挙すると、そこからもリンクされる。
+# install.local.sh（任意・gitignore 済み）で EXTRA_SKILL_DIRS を定義すると
+# 別の場所のスキルも合わせてリンクされる。
 EXTRA_SKILL_DIRS=""
 [ -f "$DOTFILES/install.local.sh" ] && . "$DOTFILES/install.local.sh"
 
 if [ -L ~/.claude/skills ]; then
   rm ~/.claude/skills
-  echo "Removed old ~/.claude/skills symlink (now per-skill links)"
+  echo "Removed old ~/.claude/skills symlink"
 fi
 mkdir -p ~/.claude/skills
-# 移設・削除されたスキルの迷子リンクを掃除
 for link in ~/.claude/skills/*; do
   if [ -L "$link" ] && [ ! -e "$link" ]; then
     rm "$link"
