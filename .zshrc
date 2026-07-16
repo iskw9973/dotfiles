@@ -35,6 +35,16 @@ zle -N edit-command-line
 bindkey '^x^e' edit-command-line
 
 # Completion
+# nix-homebrew 環境では brew の補完シムが Nix ストアの外を指したまま壊れて残る。
+# 壊れたシムを掃除し、Nix ストア内の生きた補完を fpath に足す（brew は呼ばない）。
+if [ -d /opt/homebrew/Library/Homebrew ]; then
+  _brew_shim=/opt/homebrew/share/zsh/site-functions/_brew
+  [ -L "$_brew_shim" ] && [ ! -e "$_brew_shim" ] && rm -f "$_brew_shim"
+  _brew_comp="$(dirname "$(dirname "$(readlink -f /opt/homebrew/Library/Homebrew)")")/completions/zsh"
+  [ -e "$_brew_comp/_brew" ] && fpath=("$_brew_comp" $fpath)
+  unset _brew_shim _brew_comp
+fi
+
 autoload -Uz compinit
 compinit
 zstyle ':completion:*' menu select
