@@ -2,6 +2,7 @@
 input=$(cat)
 
 CWD=$(echo "$input" | jq -r '.cwd // empty')
+MODEL=$(echo "$input" | jq -r '.model.display_name // empty')
 FIVE_H=$(echo "$input" | jq -r '.rate_limits.five_hour.used_percentage // empty')
 SEVEN_D=$(echo "$input" | jq -r '.rate_limits.seven_day.used_percentage // empty')
 
@@ -13,6 +14,9 @@ fi
 
 # cwd（常に表示）
 [ -n "$CWD" ] && printf "\033[36m%s\033[0m" "$CWD"
+
+# model（pathの右に表示）
+[ -n "$MODEL" ] && printf " \033[35m%s\033[0m" "$MODEL"
 
 # rate_limits（存在する場合のみ表示）
 if [ -n "$FIVE_H" ] || [ -n "$SEVEN_D" ]; then
