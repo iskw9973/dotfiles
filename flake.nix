@@ -38,7 +38,9 @@
         home-manager.lib.homeManagerConfiguration {
           inherit pkgs;
           modules = [ ./nix/home.nix ];
-          extraSpecialArgs = { username = user; };
+          extraSpecialArgs = {
+            username = user;
+          };
         };
 
       mkDarwin =
@@ -55,7 +57,9 @@
               };
             }
           ];
-          specialArgs = { username = user; };
+          specialArgs = {
+            username = user;
+          };
         };
     in
     {
@@ -71,6 +75,19 @@
       #   homeConfigurations.<user> = mkHome "<user>";
       #   darwinConfigurations.<user> = mkDarwin "<user>" [ ./nix/darwin.nix ];
 
-      formatter.${system} = pkgs.nixfmt-rfc-style;
+      # nixfmt はディレクトリを辿れないので、.nix を探して渡すラッパーにする
+      formatter.${system} = pkgs.writeShellApplication {
+        name = "fmt";
+        runtimeInputs = [
+          pkgs.nixfmt
+          pkgs.fd
+        ];
+        text = ''
+          if [ "$#" -gt 0 ] && [ -f "$1" ]; then
+            exec nixfmt "$@"
+          fi
+          exec fd --extension nix --type f . "''${@:-.}" --exec-batch nixfmt
+        '';
+      };
     };
 }
