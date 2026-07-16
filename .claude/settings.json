@@ -1,0 +1,65 @@
+{
+  "env": {
+    "DISABLE_ZOXIDE": "1"
+  },
+  "permissions": {
+    "defaultMode": "acceptEdits"
+  },
+  "model": "claude-fable-5[1m]",
+  "hooks": {
+    "PermissionRequest": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/notify-permission.sh",
+            "async": true
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/notify-stop.sh",
+            "async": true
+          }
+        ]
+      }
+    ],
+    "Notification": [
+      {
+        "matcher": "idle_prompt",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/notify-idle.sh",
+            "async": true
+          }
+        ]
+      }
+    ]
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "~/.claude/statusline.sh"
+  },
+  "enabledPlugins": {
+    "swift-lsp@claude-plugins-official": true,
+    "shinkoku@shinkoku": true
+  },
+  "extraKnownMarketplaces": {
+    "shinkoku": {
+      "source": {
+        "source": "github",
+        "repo": "kazukinagata/shinkoku"
+      }
+    }
+  },
+  "language": "日本語",
+  "effortLevel": "medium",
+  "tui": "fullscreen",
+  "theme": "dark"
+}

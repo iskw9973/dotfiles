@@ -1,0 +1,23 @@
+**/.claude/settings.local.json
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Node
+node_modules/
+.npm
+.pnpm-debug.log
+
+# Misc
+*.log
+.env.local
+.env.*.local
