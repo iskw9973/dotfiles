@@ -3,9 +3,9 @@
     "DISABLE_ZOXIDE": "1"
   },
   "permissions": {
-    "defaultMode": "acceptEdits"
+    "defaultMode": "auto"
   },
-  "model": "opus[1m]",
+  "model": "sonnet",
   "hooks": {
     "PermissionRequest": [
       {
@@ -47,8 +47,13 @@
     "command": "~/.claude/statusline.sh"
   },
   "enabledPlugins": {
-    "swift-lsp@claude-plugins-official": true,
-    "shinkoku@shinkoku": true
+    "swift-lsp@claude-plugins-official": false,
+    "shinkoku@shinkoku": false
+  },
+  "skillOverrides": {
+    "typescript-practice": "off",
+    "justfile": "off",
+    "empirical-prompt-tuning": "off"
   },
   "extraKnownMarketplaces": {
     "shinkoku": {
